@@ -20,7 +20,6 @@ const App = () => {
   return (
   
     <Routes>
-      {/* <Route path='/' element={<Navigate to='/login'/>}/> */}
      <Route path='/' element={<Login/>}/>
      <Route path='verify-otp' element={<VerifyOtp/>}/>
      <Route path='/register' element={<Register/>}/>
