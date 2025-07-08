@@ -7,6 +7,9 @@ const nodemailer = require("nodemailer");
 const User = require('./model')
 const JWT_SECRET = "mysecretkey";
 
+require('dotenv').config();
+
+
 const app = express(); // express server ka object bnaya
 const PORT = process.env.PORT || 5000;
 
@@ -14,7 +17,8 @@ app.use("/uploads", express.static("uploads"));
 app.use(cors()); // allow krta ha react(Frontend) ko request bhjne k liy
 app.use(express.json());
 
-mongoose.connect("mongodb://127.0.0.1:27017/edugram", {
+mongoose.connect(process.env.MONGO_URI, 
+ {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

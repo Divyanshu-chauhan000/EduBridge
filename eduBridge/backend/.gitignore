@@ -1,0 +1,19 @@
+# Ignore environment variables
+.env
+
+# Ignore node_modules (package dependencies)
+node_modules/
+
+# Ignore logs
+logs
+*.log
+npm-debug.log*
+
+# Ignore optional runtime files
+pids
+*.pid
+*.seed
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
