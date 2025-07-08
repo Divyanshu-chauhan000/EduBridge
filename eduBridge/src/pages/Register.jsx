@@ -19,7 +19,7 @@ const Register = () => {
       return;
     }
     try{
-      const res = await fetch("http://localhost:5000/api/send-otp",{
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/send-otp`,{
         method: 'POST',
         headers:{
           'Content-Type':"application/json",
@@ -51,7 +51,7 @@ const Register = () => {
 
     try{
       console.log("Sending OTP verify request with:", { email, otp });
-      const otpRes = await fetch("http://localhost:5000/api/verify-otp",{
+      const otpRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/verify-otp`,{
         method: "POST",
         headers: {
           "Content-Type":"application/json"
@@ -63,7 +63,7 @@ const Register = () => {
 
       if(otpRes.ok){
         console.log("OTP Verified ✅, Now Registering:", { username, password, email });
-        const regRes = await fetch("http://localhost:5000/api/register",{
+        const regRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/register`,{
           method : "POST",
           headers:{
             "Content-Type":"application/json"
