@@ -23,7 +23,7 @@ import RightAside from '../components/RightAside'
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-transparent text-gray-800 min-h-screen overflow-y-auto pb-20 lg:pb-0">
+      <div className="flex-1 h-screen overflow-y-auto bg-transparent text-gray-800 pb-20 lg:pb-0">
         <Outlet />
       </div>
 

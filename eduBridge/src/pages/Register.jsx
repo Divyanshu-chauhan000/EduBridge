@@ -12,36 +12,40 @@ const Register = () => {
   const [ email , setemail] = useState("");
 
 
-  const handlesendOtp = async()=>{
-
-    if(!email){
-      alert("Please enter your email address");
-      return;
-    }
-    try{
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/send-otp`,{
-        method: 'POST',
-        headers:{
-          'Content-Type':"application/json",
-        },
-        body: JSON.stringify({email}),
-      })
-      const data = await res.json();
-
-      if(res.ok){
-        alert("Otp sent to your email");
-        console.log("email received",email)
-        navigate('/verify-otp',{state:{email}});
-        setOtpSent(true);
-      }
-      else{
-        alert(data.message);
-      }
-    }
-    catch(err){
-      alert("Failed to sent OTP");
-    }
+  const handlesendOtp = async () => {
+  if (!email || !username || !password) {
+    alert("Please fill all fields before sending OTP");
+    return;
   }
+
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/send-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("OTP sent to your email");
+      setOtpSent(true)
+      navigate('/verify-otp', {
+        state: {
+          email,
+          username,
+          password,
+        },
+      });
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    alert("Failed to send OTP");
+  }
+};
 
   const handleverifying = async ()=>{
     if(!username || !password || !otp){
@@ -88,8 +92,8 @@ const Register = () => {
       }
     }
     catch(err){
-      console.log(err);
-      alert("Server Error");
+       console.log(err?.response?.data || err.message);
+      alert(err?.response?.data?.message || "Server error during registration");
     }
   };
 

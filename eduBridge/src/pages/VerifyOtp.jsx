@@ -1,41 +1,99 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '../components/Button'
 import { useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 const VerifyOtp = () => {
   const location = useLocation();
   const email = location.state?.email;
+  const username = location.state?.username;
+  const password = location.state?.password;
   const[otp,setOtp] = useState("");
   const navigate = useNavigate();
+   
+   useEffect(() => {
+    if (!email || !username || !password) {
+      alert("Missing registration info. Please register again.");
+      navigate("/register");
+    }
+  }, []);
 
-  const handleVerify = async ()=>{
-    if(otp.length !==6){
+   const handleVerify = async () => {
+    if (otp.length !== 6) {
       alert("Enter a 6-digit OTP");
       return;
     }
-    try{
-      const res = await fetch("http://localhost:5000/api/verify-otp",{
+
+    try {
+      // Step 1: Verify OTP
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/verify-otp`, {
         method: "POST",
-        headers:{
-          "Content-Type":"application/json"
+        headers: {
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({email,otp})
+        body: JSON.stringify({ email, otp }),
       });
+
       const data = await res.json();
 
-      if(res.status=== 200){
+      if (res.ok) {
         alert("OTP Verified");
-        navigate("/");
-      }
-      else{
+
+        const registerRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username.toLowerCase(),
+            password,
+            email: email.toLowerCase(),
+          }),
+        });
+
+        const regData = await registerRes.json();
+
+        if (registerRes.ok) {
+          alert("Registration successful!");
+          navigate("/");
+        } else {
+          alert(regData.message || "Registration failed");
+        }
+
+      } else {
         alert(data.message || "Invalid OTP");
       }
-    }
-    catch(err){
+    } catch (err) {
       alert("Server Error");
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
+ 
+   const handleResend = async () => {
+    if (!email) {
+      alert("No email found");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/send-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': "application/json"
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("OTP resent to your email.");
+      } else {
+        alert(data.message || "Failed to resend OTP");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Server Error while resending OTP");
+    }
+  };
 
   return (
     <div className="bg-black h-[100vh] flex justify-center items-center">
@@ -59,7 +117,7 @@ const VerifyOtp = () => {
 
         <Button text="Verify & Continue" className="w-full mt-4" onClick={handleVerify} />
 
-        <div className="text-center text-gray-400 mt-4 text-sm">
+        <div className="text-center text-gray-400 mt-4 text-sm " onClick={handleResend}>
           Didn't receive OTP? <span className="text-blue-400 cursor-pointer hover:underline">Resend</span>
         </div>
       </div>

@@ -17,32 +17,32 @@ import {
 import Button from '../components/Button'
 
 const Profile = () => {
-   
 
-  const {userId}  = useParams();
-  const [userData , setUserData] = useState(null);
-  const [activeTab , setActiveTab] = useState('posts');
-  const [posts , setPosts] = useState([]);
+
+  const { userId } = useParams();
+  const [userData, setUserData] = useState(null);
+  const [activeTab, setActiveTab] = useState('posts');
+  const [posts, setPosts] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false)
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [newPost, setNewPost] = useState({ type: "note", image: null, imagePreview: "", caption: "", price: "" })
 
   const fileInputRef = useRef(null)
 
-  useEffect(()=>{
+  useEffect(() => {
     fetch(`http://localhost:5000/api/user/${userId}`)
-    .then(res => res.json())
-    .then(data => setUserData(data));
+      .then(res => res.json())
+      .then(data => setUserData(data));
 
 
     fetch(`http://localhost:5000/api/posts/${userId}`)
-    .then(res => res.json())
-    .then(data=>setPosts(data))
-  },[userId]);
+      .then(res => res.json())
+      .then(data => setPosts(data))
+  }, [userId]);
 
 
-  const handleFollow = () =>{
-     setIsFollowing(!isFollowing)
+  const handleFollow = () => {
+    setIsFollowing(!isFollowing)
     // Update follower count
     setUserData((prev) => ({
       ...prev,
@@ -65,7 +65,7 @@ const Profile = () => {
     }
   }
 
-   const handleUploadPost = () => {
+  const handleUploadPost = () => {
     if (!newPost.image) return
 
     const post = {
@@ -86,7 +86,7 @@ const Profile = () => {
   const renderPosts = (type) => {
     const filtered = posts.filter(post => post.type === type) || [];
     return (
-       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 mt-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 mt-4">
         {filtered.map((post, index) => (
           <div key={index} className="relative group cursor-pointer">
             <img
@@ -117,15 +117,17 @@ const Profile = () => {
     )
   }
 
-  const currentUserId = localStorage.getItem("userId")
+  const user = JSON.parse(localStorage.getItem("user"));
+  const currentUserId = user?.userId;
+
   const isOwnProfile = String(currentUserId) === String(userId)
 
-    
-  
 
-    
+
+
+
   return (
-     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
       <div className="max-w-4xl mx-auto p-4 md:p-6">
         {/* Profile Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-indigo-100 p-6 mb-6">
@@ -148,7 +150,7 @@ const Profile = () => {
                 <div className="flex gap-2 justify-center md:justify-start">
                   {isOwnProfile ? (
                     <>
-                      <Link to={`/editprofile/${userId}`}>
+                      <Link to={`/editprofile`}>
                         <button className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors shadow-sm">
                           <Settings size={16} />
                           <span className="hidden md:inline">Edit Profile</span>
@@ -165,11 +167,10 @@ const Profile = () => {
                   ) : (
                     <button
                       onClick={handleFollow}
-                      className={`flex items-center space-x-2 px-6 py-2 rounded-lg transition-colors shadow-sm ${
-                        isFollowing
+                      className={`flex items-center space-x-2 px-6 py-2 rounded-lg transition-colors shadow-sm ${isFollowing
                           ? "bg-gray-200 hover:bg-gray-300 text-gray-700"
                           : "bg-indigo-600 hover:bg-indigo-700 text-white"
-                      }`}
+                        }`}
                     >
                       {isFollowing ? <UserCheck size={16} /> : <UserPlus size={16} />}
                       <span>{isFollowing ? "Following" : "Follow"}</span>
@@ -210,33 +211,30 @@ const Profile = () => {
             <div className="flex space-x-8 px-6">
               <button
                 onClick={() => setActiveTab("posts")}
-                className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${
-                  activeTab === "posts"
+                className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${activeTab === "posts"
                     ? "border-indigo-500 text-indigo-600"
                     : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
+                  }`}
               >
                 <Grid size={16} />
                 <span className="hidden md:inline font-medium">Posts</span>
               </button>
               <button
                 onClick={() => setActiveTab("sell")}
-                className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${
-                  activeTab === "sell"
+                className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${activeTab === "sell"
                     ? "border-indigo-500 text-indigo-600"
                     : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
+                  }`}
               >
                 <ShoppingBag size={16} />
                 <span className="hidden md:inline font-medium">Selling</span>
               </button>
               <button
                 onClick={() => setActiveTab("buy")}
-                className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${
-                  activeTab === "buy"
+                className={`flex items-center space-x-2 py-4 border-b-2 transition-colors ${activeTab === "buy"
                     ? "border-indigo-500 text-indigo-600"
                     : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
+                  }`}
               >
                 <ShoppingCart size={16} />
                 <span className="hidden md:inline font-medium">Buying</span>

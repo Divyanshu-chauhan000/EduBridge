@@ -15,7 +15,8 @@ const Aside = () => {
     { icon: MessageCircle, label: "Messages", path: "/messages" },
     { icon: Bell, label: "Notifications", path: "/notifications" },
     { icon: Plus, label: "Upload Yours", path: "/upload" },
-    { icon: User, label: "Profile", path: `/profile/${localStorage.getItem("userId") || ":userId"}` },
+    { icon: User, label: "Profile", path: `/profile/${JSON.parse(localStorage.getItem("user"))?.userId}` },
+    
   ]
 
   const bottomItems = [

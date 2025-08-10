@@ -60,7 +60,7 @@ const [selectedFile, setSelectedFile] = useState(null)
   }
 
   const handleSubmit = (e) =>{
-    e.prevent.default();
+    e.preventDefault();
 
     const updateData = {
       ...form,

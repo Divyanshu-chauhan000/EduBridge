@@ -21,7 +21,7 @@ const App = () => {
   
     <Routes>
      <Route path='/' element={<Login/>}/>
-     <Route path='verify-otp' element={<VerifyOtp/>}/>
+     <Route path='/verify-otp' element={<VerifyOtp/>}/>
      <Route path='/register' element={<Register/>}/>
      <Route element={<MainLayout/>}>
      <Route path="/profile/:userId" element={<PrivateRoute><Profile/></PrivateRoute>} />
